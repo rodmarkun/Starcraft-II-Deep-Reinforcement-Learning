@@ -1,4 +1,5 @@
 models
 __pycache__
 ppo_tensorboard
+ppo_tb*
 wandb

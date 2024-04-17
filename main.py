@@ -14,6 +14,7 @@ from gymnasium.spaces import MultiDiscrete, Discrete, Box
 # StableBaselines3 imports
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import SubprocVecEnv
+from stable_baselines3.common.callbacks import CheckpointCallback
 
 # SC2 API imports
 from sc2.data import Difficulty, Race
@@ -30,7 +31,7 @@ episode_reward_list = []
 
 # Change the comments in the following two lines to create a new model 
 model_name = f"{int(time.time())}"
-#model_name = 1712752179
+#model_name = 1713118942
 
 models_dir = f"models/{model_name}/"
 
@@ -104,24 +105,29 @@ def make_env():
 def train_ppo():
     if not os.path.exists(models_dir):
         os.makedirs(models_dir)
+    
     num_envs = constants.NUMBER_OF_CONCURRENT_EXECUTIONS
     env = SubprocVecEnv([make_env() for i in range(num_envs)])
-
-    model_path = f"models\{model_name}\model.zip"
+    model_path = os.path.join(models_dir, "model.zip")
 
     if os.path.exists(model_path):
         print("Loading existing model")
-        model = PPO.load(model_path, env=env)
+        model = PPO.load(model_path, env=env, verbose=1, tensorboard_log=f"./ppo_tb_{model_name}")
     else:
         print("Creating new model")
-        model = PPO('MlpPolicy', env, verbose=1, tensorboard_log="./ppo_tensorboard")
+        model = PPO('MlpPolicy', env, n_steps=1024, batch_size=32, verbose=2, tensorboard_log=f"./ppo_tb_{model_name}")
+
+    checkpoint_callback = CheckpointCallback(save_freq=10000, save_path=models_dir,
+                                             name_prefix='ppo_model')
 
     iters = 0
     while iters < constants.NUMBER_OF_ITERATIONS:
-        print("On iteration: ", iters)
+        print(f"On iteration: {iters}")
         iters += 1
-        result = model.learn(total_timesteps=constants.TIMESTEPS, reset_num_timesteps=False, tb_log_name="PPO")
-        model.save(f"{models_dir}/model")
+        model.learn(total_timesteps=constants.TIMESTEPS, reset_num_timesteps=False,
+                    tb_log_name=f"PPO_run_tb_{model_name}", callback=checkpoint_callback, progress_bar=True)
+        model.save(os.path.join(models_dir, "model"))
+
     env.close()
 
 if __name__ == "__main__":

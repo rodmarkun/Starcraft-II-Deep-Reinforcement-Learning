@@ -25,7 +25,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
         if str(game_result) == "Result.Victory":
             reward = int(500 + 1800 / self.time * 100) # The faster the victory, the better
         else:
-            reward = 0
+            reward = -500
 
         self.result_out.put({"observation" : obs, "reward" : reward, "action" : None, "done" : True, "truncated" : False, "info" : {}})
         
@@ -41,8 +41,8 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
 
         self.action = self.action_in.get()
 
-        if iteration % 10 == 0:
-            print(f"Iteration: {iteration} | Action: {self.action}")
+        #if iteration % 10 == 0:
+        #    print(f"Iteration: {iteration} | Action: {self.action}")
 
         if self.action is None:
             print("no action returning.")
@@ -79,8 +79,8 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
 
         obs = self.visualize_intel()
         reward = self.reward_function()
-        if iteration % 10 == 0:
-            print(f"Reward: {reward}")
+        #if iteration % 10 == 0:
+        #    print(f"Reward: {reward}")
 
         self.result_out.put({"observation" : obs, "reward" : reward, "action" : None, "done" : False, "truncated" : False, "info" : {}})
 
@@ -168,7 +168,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
             # if voidray is attacking and is in range of enemy unit:
             if vr.is_attacking and vr.target_in_range:
                 if self.enemy_units.closer_than(12, vr) or self.enemy_structures.closer_than(12, vr):
-                    reward += 0.02  
+                    reward += 0.01  
                     attack_count += 1
 
         return reward
