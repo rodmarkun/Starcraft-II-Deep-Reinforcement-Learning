@@ -35,7 +35,7 @@ NUMBER_OF_CONCURRENT_EXECUTIONS = 3
 
 # Defines the number of timesteps for which the model is trained in each iteration.
 # A timestep generally represents a single decision-making step of the agent.
-TIMESTEPS = 10000
+TIMESTEPS = 5000
 
 # The total number of iterations to run the training. Each iteration consists of
 # training for the specified number of timesteps.

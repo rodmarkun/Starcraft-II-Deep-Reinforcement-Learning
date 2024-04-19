@@ -31,7 +31,7 @@ episode_reward_list = []
 
 # Change the comments in the following two lines to create a new model 
 model_name = f"{int(time.time())}"
-#model_name = 1713118942
+#model_name = 1713369445 # Too Large Model
 
 models_dir = f"models/{model_name}/"
 

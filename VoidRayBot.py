@@ -14,6 +14,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
         self.action_in = action_in
         self.result_out = result_out
         self.main_base_destroyed = False
+        self.last_action_time = 0
 
     async def on_end(self,game_result):
         print ("Game over!")
@@ -23,7 +24,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
         print(f"GAME DURATION: {self.time}")
         
         if str(game_result) == "Result.Victory":
-            reward = int(500 + 1800 / self.time * 100) # The faster the victory, the better
+            reward = 500
         else:
             reward = -500
 
@@ -31,6 +32,11 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
         
 
     async def on_step(self, iteration): # on_step is a method that is called every step of the game.
+        if self.time - self.last_action_time < 1:
+            return
+
+        self.last_action_time = self.time  
+
         game_time_minutes = self.time / 60  # self.time is in seconds
 
         if game_time_minutes > 30:
@@ -41,12 +47,12 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
 
         self.action = self.action_in.get()
 
-        #if iteration % 10 == 0:
-        #    print(f"Iteration: {iteration} | Action: {self.action}")
+        print(f"Iteration: {iteration} | Action: {self.action} | Game time: {self.time}")
 
         if self.action is None:
             print("no action returning.")
             return None
+        
         
         # DRL Agent Logic
         # 0 - Expand, Build Assimilators and Workers (Long-Term Economy)
@@ -161,7 +167,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
                 voidray.attack(self.enemy_start_locations[0])
         
     def reward_function(self):
-        reward = 0
+        reward = -0.005
         attack_count = 0
         # iterate through our void rays:
         for vr in self.units(UnitTypeId.VOIDRAY):
