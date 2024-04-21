@@ -32,7 +32,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
         
 
     async def on_step(self, iteration): # on_step is a method that is called every step of the game.
-        if self.time - self.last_action_time < 1:
+        if self.time - self.last_action_time < 0.5:
             return
 
         self.last_action_time = self.time  
@@ -167,14 +167,14 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
                 voidray.attack(self.enemy_start_locations[0])
         
     def reward_function(self):
-        reward = -0.005
+        reward = -0.2
         attack_count = 0
         # iterate through our void rays:
         for vr in self.units(UnitTypeId.VOIDRAY):
             # if voidray is attacking and is in range of enemy unit:
             if vr.is_attacking and vr.target_in_range:
                 if self.enemy_units.closer_than(12, vr) or self.enemy_structures.closer_than(12, vr):
-                    reward += 0.01  
+                    reward += 0.15  
                     attack_count += 1
 
         return reward

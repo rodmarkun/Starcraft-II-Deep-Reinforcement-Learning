@@ -1,5 +1,6 @@
 gymnasium==0.29.1
-numpy==1.26.4
-ray==2.10.0
+matplotlib==3.8.2
+numpy==1.21.5
+pandas==2.2.2
 sc2==0.11.2
-wandb==0.16.6
+stable_baselines3==2.3.0

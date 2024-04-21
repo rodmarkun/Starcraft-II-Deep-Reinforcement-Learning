@@ -26,7 +26,7 @@ from sc2 import maps
 from VoidRayBot import VRBot
 
 # Global variables to pick the right experiment and WandB project.
-mapName = "Simple64"
+mapName = "AbyssalReefLE"
 episode_reward_list = []
 
 # Change the comments in the following two lines to create a new model 
@@ -48,7 +48,7 @@ class GameThread(Thread):
         result = run_game(  # run_game is a function that runs the game.
             maps.get(mapName), # the map we are playing on
             [Bot(Race.Protoss, self.bot), # runs our coded bot, and we pass our bot object 
-            Computer(Race.Terran, Difficulty.Hard)], # runs a pre-made computer agent, with a hard difficulty.
+            Computer(Race.Terran, Difficulty.Medium)], # runs a pre-made computer agent, with a hard difficulty.
             realtime=False, # When set to True, the agent is limited in how long each step can take to process.
         )
 
