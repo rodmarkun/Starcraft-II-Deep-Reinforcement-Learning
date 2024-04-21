@@ -1,5 +1,5 @@
 import numpy as np
-
+from gymnasium import spaces
 
 # Define the number of discrete actions available for the DRL agent to take.
 # These actions are:
@@ -22,11 +22,11 @@ NUMBER_OF_ACTIONS = 6
 #   PylonsNum: The number of Pylons (supply and power-providing structures).
 #   SupplyLeft: The amount of remaining supply capacity for building additional units.
 #   SecondsOfGame: The elapsed game time in seconds.
-OBSERVATION_SPACE_ARRAY = [200, 100, 100, 20, 40, 150, 200, 200, 1900]
+OBSERVATION_SPACE_ARRAY = spaces.Box(low=0, high=255, shape=(224, 224, 3), dtype=np.uint8)
 
 # Defines an empty observation indicating the initial or reset state of the environment,
 # typically used at the start of a new episode.
-EMPTY_OBSERVATION = np.zeros(len(OBSERVATION_SPACE_ARRAY), dtype=np.int32)
+EMPTY_OBSERVATION = np.zeros((224, 224, 3), dtype=np.uint8)
 
 # Specifies the number of environments that are run in parallel during training.
 # Running multiple environments concurrently can significantly speed up training

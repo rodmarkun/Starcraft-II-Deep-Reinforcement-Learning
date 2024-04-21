@@ -57,7 +57,7 @@ class QueueEnv(gym.Env):
     def __init__(self, config=None, render_mode=None): # None, "human", "rgb_array"
         super(QueueEnv, self).__init__()
         self.action_space = Discrete(constants.NUMBER_OF_ACTIONS)
-        self.observation_space = MultiDiscrete(constants.OBSERVATION_SPACE_ARRAY)
+        self.observation_space = constants.OBSERVATION_SPACE_ARRAY
         self.current_episode_reward = 0 
         self.rewards_file = os.path.join(models_dir, "episode_rewards.csv")  # Define el archivo CSV
 
@@ -88,11 +88,10 @@ class QueueEnv(gym.Env):
     def reset(self, *, seed=None, options=None):
         print("--- RESETTING ENVIRONMENT ---")
         time.sleep(5)
-        observation = constants.EMPTY_OBSERVATION
+        observation = np.zeros((224, 224, 3), dtype=np.uint8)
         info = {}
         self.gameThread = GameThread()
         self.gameThread.start()
-        observation = np.clip(observation, 0, np.inf).astype(np.int32)
         return observation, info
 
 

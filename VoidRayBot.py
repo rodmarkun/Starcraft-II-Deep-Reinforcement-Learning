@@ -1,11 +1,13 @@
 # General imports
 import random
 import constants
+import math
+import cv2
 import numpy as np
-from sc2.ids.unit_typeid import UnitTypeId
 
 # SC2 API imports
 from sc2.bot_ai import BotAI  # parent class we inherit from
+from sc2.ids.unit_typeid import UnitTypeId
 from sc2.ids.unit_typeid import UnitTypeId
 
 class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
@@ -19,7 +21,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
     async def on_end(self,game_result):
         print ("Game over!")
         
-        obs = constants.EMPTY_OBSERVATION
+        obs = np.zeros((224, 224, 3), dtype=np.uint8)
 
         print(f"GAME DURATION: {self.time}")
         
@@ -181,8 +183,8 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
     
     def visualize_intel(self):
 
-        obs = constants.EMPTY_OBSERVATION
-        limits = np.array(constants.OBSERVATION_SPACE_ARRAY)
+        obs = np.zeros((224, 224, 3), dtype=np.uint8)
+        """ limits = np.array(constants.OBSERVATION_SPACE_ARRAY)
 
         # Number of probes
         obs[0] = self.units(UnitTypeId.PROBE).amount
@@ -205,5 +207,88 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
 
         for i in range(len(obs)):
             if obs[i] >= limits[i]-1:
-                obs[i] = limits[i] - 1
+                obs[i] = limits[i] - 1 """
+
+        # Draw our units
+        for our_unit in self.all_own_units:
+            # if it is a voidray:
+            if our_unit.type_id == UnitTypeId.VOIDRAY:
+                pos = our_unit.position
+                c = [255, 75 , 75]
+                # get health:
+                fraction = our_unit.health / our_unit.health_max if our_unit.health_max > 0 else 0.0001
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+
+
+            else:
+                pos = our_unit.position
+                c = [175, 255, 0]
+                # get health:
+                fraction = our_unit.health / our_unit.health_max if our_unit.health_max > 0 else 0.0001
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+
+        # Draw the minerals
+        for mineral in self.mineral_field:
+            pos = mineral.position
+            c = [175, 255, 255]
+            fraction = mineral.mineral_contents / 1800
+            if mineral.is_visible:
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = c
+            else:
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [20,75,50]  
+
+        # Draw the enemy start location
+        for pos in self.enemy_start_locations:
+            c = [0, 0, 255]
+            obs[math.ceil(pos.y)][math.ceil(pos.x)] = c
+
+        # Draw the enemy units
+        for enemy_unit in self.all_enemy_units:
+            pos = enemy_unit.position
+            c = [100, 0, 255]
+            # get unit health fraction:
+            fraction = enemy_unit.health / enemy_unit.health_max if enemy_unit.health_max > 0 else 0.0001
+            obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+
+        # Draw the enemy structures
+        for enemy_structure in self.enemy_structures:
+            pos = enemy_structure.position
+            c = [0, 100, 255]
+            # get structure health fraction:
+            fraction = enemy_structure.health / enemy_structure.health_max if enemy_structure.health_max > 0 else 0.0001
+            obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+
+        # Draw our structures
+        for our_structure in self.all_own_units.structure:
+            if our_structure.type_id == UnitTypeId.NEXUS:
+                pos = our_structure.position
+                c = [255, 255, 175]
+                # get structure health fraction:
+                fraction = our_structure.health / our_structure.health_max if our_structure.health_max > 0 else 0.0001
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+            
+            else:
+                pos = our_structure.position
+                c = [0, 255, 175]
+                # get structure health fraction:
+                fraction = our_structure.health / our_structure.health_max if our_structure.health_max > 0 else 0.0001
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+
+        # Draw the vespene geysers
+        for vespene in self.vespene_geyser:
+            pos = vespene.position
+            c = [255, 175, 255]
+            fraction = vespene.vespene_contents / 2250
+
+            if vespene.is_visible:
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [int(fraction*i) for i in c]
+            else:
+                obs[math.ceil(pos.y)][math.ceil(pos.x)] = [50,20,75]
+
+
+
+        # Show obs with OpenCV, resized to be larger
+        #cv2.imshow('obs',cv2.flip(cv2.resize(obs, None, fx=4, fy=4, interpolation=cv2.INTER_NEAREST), 0))
+        #cv2.waitKey(1)
+        
         return obs
