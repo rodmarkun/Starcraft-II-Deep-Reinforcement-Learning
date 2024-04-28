@@ -31,7 +31,7 @@ episode_reward_list = []
 
 # Change the comments in the following two lines to create a new model 
 model_name = f"{int(time.time())}"
-#model_name = 1713369445 # Too Large Model
+#model_name = 1713701470
 
 models_dir = f"models/{model_name}/"
 
@@ -114,7 +114,7 @@ def train_ppo():
         model = PPO.load(model_path, env=env, verbose=1, tensorboard_log=f"./ppo_tb_{model_name}")
     else:
         print("Creating new model")
-        model = PPO('MlpPolicy', env, n_steps=1024, batch_size=32, verbose=2, tensorboard_log=f"./ppo_tb_{model_name}")
+        model = PPO('CnnPolicy', env, n_steps=256, batch_size=32, verbose=2, tensorboard_log=f"./ppo_tb_{model_name}")
 
     checkpoint_callback = CheckpointCallback(save_freq=10000, save_path=models_dir,
                                              name_prefix='ppo_model')

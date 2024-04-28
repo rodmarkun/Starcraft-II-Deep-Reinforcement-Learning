@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the data
-data = pd.read_csv('models/1713546514/episode_rewards.csv')
+data = pd.read_csv('models/1714143864/episode_rewards.csv')
 
 # Plot the data
 plt.figure(figsize=(15, 6))  # Set the figure size

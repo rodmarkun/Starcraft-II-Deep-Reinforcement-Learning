@@ -31,7 +31,7 @@ EMPTY_OBSERVATION = np.zeros((224, 224, 3), dtype=np.uint8)
 # Specifies the number of environments that are run in parallel during training.
 # Running multiple environments concurrently can significantly speed up training
 # by providing diverse experiences from multiple games.
-NUMBER_OF_CONCURRENT_EXECUTIONS = 6
+NUMBER_OF_CONCURRENT_EXECUTIONS = 5
 
 # Defines the number of timesteps for which the model is trained in each iteration.
 # A timestep generally represents a single decision-making step of the agent.

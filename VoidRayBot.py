@@ -26,9 +26,9 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
         print(f"GAME DURATION: {self.time}")
         
         if str(game_result) == "Result.Victory":
-            reward = 500
+            reward = 300
         else:
-            reward = -500
+            reward = -300
 
         self.result_out.put({"observation" : obs, "reward" : reward, "action" : None, "done" : True, "truncated" : False, "info" : {}})
         
@@ -169,7 +169,7 @@ class VRBot(BotAI): # inhereits from BotAI (part of BurnySC2)
                 voidray.attack(self.enemy_start_locations[0])
         
     def reward_function(self):
-        reward = -0.2
+        reward = 0
         attack_count = 0
         # iterate through our void rays:
         for vr in self.units(UnitTypeId.VOIDRAY):
