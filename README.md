@@ -1,6 +1,10 @@
 # Starcraft II - Deep Reinforcement Learning
 
+![Starcraft2_logo_v2](https://github.com/rodmarkun/Starcraft-II-Deep-Reinforcement-Learning/assets/75074498/8d5098b2-302c-4a13-9868-9dfc98fdab4f)
+
 Starcraft II is a popular real-time strategy (RTS) game developed by Blizzard Entertainment, released in 2010. It is the sequel to the 1998 game Starcraft, and like its predecessor, it has had a significant impact on both the gaming and AI research communities. The game is set in a distant part of the galaxy during the 26th century and features three different species: Terrans, Protoss, and Zerg, each with unique units and structures, offering varied strategies and gameplay styles.
+
+![starcraft-2-1](https://github.com/rodmarkun/Starcraft-II-Deep-Reinforcement-Learning/assets/75074498/3bdecf35-e2b1-42a9-97c3-1d49c2afe0e6)
 
 Starcraft II is a complex real-time strategy game that has become a significant benchmark in the field of deep reinforcement learning (DRL) due to its intricate decision-making requirements and dynamic gameplay. The game's environment, which demands real-time actions and decisions across diverse strategies and continuous adjustments to opponents' tactics, challenges DRL models to handle real-world-like scenarios with high levels of adaptability and strategic depth. 
 
